@@ -1,0 +1,32 @@
+package com.abc.service;
+
+import com.abc.Pico;
+import org.hibernate.Session;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+
+public class TransactionService {
+
+    public void executeInTransaction(Runnable runnable) {
+        EntityManager em = Pico.getEntityManager();
+        EntityTransaction tx = null;
+
+        try {
+            Session session = em.unwrap(Session.class);
+            tx = session.beginTransaction();
+
+            runnable.run();
+
+            em.flush();
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+
+            throw e;
+        }
+    }
+
+}
