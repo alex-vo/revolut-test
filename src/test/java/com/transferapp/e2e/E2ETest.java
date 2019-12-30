@@ -1,9 +1,10 @@
 package com.transferapp.e2e;
 
+import com.google.gson.Gson;
 import com.transferapp.TransferApp;
 import com.transferapp.dto.AccountStateDTO;
+import com.transferapp.dto.ResponseMessageDTO;
 import com.transferapp.dto.TransferDTO;
-import com.google.gson.Gson;
 import io.restassured.RestAssured;
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.BeforeAll;
@@ -74,54 +75,54 @@ public class E2ETest {
     public void testTransferFunds_fail_validationErrors() {
         TransferDTO dto = prepareTransferDTO(FIRST_ACCOUNT_ID, SECOND_ACCOUNT_ID, BigDecimal.ONE);
         dto.setAmount(null);
-        String errorMessage = RestAssured.given().body(GSON.toJson(dto))
+        ResponseMessageDTO responseMessageDTO = RestAssured.given().body(GSON.toJson(dto))
                 .post("/transfer")
                 .then().statusCode(400)
-                .extract().asString();
-        assertThat(errorMessage, is("amount cannot be empty"));
+                .extract().as(ResponseMessageDTO.class);
+        assertThat(responseMessageDTO.getMessage(), is("amount cannot be empty"));
         dto.setAmount(BigDecimal.ONE);
         dto.setFrom(null);
-        errorMessage = RestAssured.given().body(GSON.toJson(dto))
+        responseMessageDTO = RestAssured.given().body(GSON.toJson(dto))
                 .post("/transfer")
                 .then().statusCode(400)
-                .extract().asString();
-        assertThat(errorMessage, is("source account cannot be empty"));
+                .extract().as(ResponseMessageDTO.class);
+        assertThat(responseMessageDTO.getMessage(), is("source account cannot be empty"));
         dto.setFrom(FIRST_ACCOUNT_ID);
         dto.setTo(null);
-        errorMessage = RestAssured.given().body(GSON.toJson(dto))
+        responseMessageDTO = RestAssured.given().body(GSON.toJson(dto))
                 .post("/transfer")
                 .then().statusCode(400)
-                .extract().asString();
-        assertThat(errorMessage, is("destination account cannot be empty"));
+                .extract().as(ResponseMessageDTO.class);
+        assertThat(responseMessageDTO.getMessage(), is("destination account cannot be empty"));
         dto.setTo(FIRST_ACCOUNT_ID);
-        errorMessage = RestAssured.given().body(GSON.toJson(dto))
+        responseMessageDTO = RestAssured.given().body(GSON.toJson(dto))
                 .post("/transfer")
                 .then().statusCode(400)
-                .extract().asString();
-        assertThat(errorMessage, is("Cannot transfer to self"));
+                .extract().as(ResponseMessageDTO.class);
+        assertThat(responseMessageDTO.getMessage(), is("Cannot transfer to self"));
         dto.setTo(SECOND_ACCOUNT_ID);
         dto.setAmount(BigDecimal.valueOf(-1L));
-        errorMessage = RestAssured.given().body(GSON.toJson(dto))
+        responseMessageDTO = RestAssured.given().body(GSON.toJson(dto))
                 .post("/transfer")
                 .then().statusCode(400)
-                .extract().asString();
-        assertThat(errorMessage, is("transfer amount has to be positive"));
+                .extract().as(ResponseMessageDTO.class);
+        assertThat(responseMessageDTO.getMessage(), is("transfer amount has to be positive"));
     }
 
     @Test
     public void testTransferFunds_fail_nonExistingAccounts() {
         TransferDTO dto = prepareTransferDTO(100L, 101L, BigDecimal.ONE);
-        String errorMessage = RestAssured.given().body(GSON.toJson(dto))
+        ResponseMessageDTO responseMessageDTO = RestAssured.given().body(GSON.toJson(dto))
                 .post("/transfer")
                 .then().statusCode(404)
-                .extract().asString();
-        assertThat(errorMessage, is(String.format("account %d not found", 100L)));
+                .extract().as(ResponseMessageDTO.class);
+        assertThat(responseMessageDTO.getMessage(), is(String.format("account %d not found", 100L)));
         dto.setFrom(FIRST_ACCOUNT_ID);
-        errorMessage = RestAssured.given().body(GSON.toJson(dto))
+        responseMessageDTO = RestAssured.given().body(GSON.toJson(dto))
                 .post("/transfer")
                 .then().statusCode(404)
-                .extract().asString();
-        assertThat(errorMessage, is(String.format("account %d not found", 101L)));
+                .extract().as(ResponseMessageDTO.class);
+        assertThat(responseMessageDTO.getMessage(), is(String.format("account %d not found", 101L)));
     }
 
     private TransferDTO prepareTransferDTO(Long from, Long to, BigDecimal amount) {

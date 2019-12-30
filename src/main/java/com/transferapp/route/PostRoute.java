@@ -1,7 +1,7 @@
 package com.transferapp.route;
 
 import com.google.gson.Gson;
-import com.transferapp.dto.ErrorResponseDTO;
+import com.transferapp.dto.ResponseMessageDTO;
 import com.transferapp.dto.validation.AbstractDTOValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -11,8 +11,6 @@ import spark.Response;
 import spark.Route;
 
 import java.util.List;
-
-import static spark.Spark.halt;
 
 /**
  * Generic HTTP request handler that is supposed to process a POST request
@@ -36,23 +34,26 @@ public abstract class PostRoute<T> implements Route {
     public Object handle(Request request, Response response) {
         T dto = gson.fromJson(request.body(), clazz);
 
+        response.type("application/json");
+
         List<String> validationErrors = this.getDTOValidator().validate(dto);
         if (CollectionUtils.isNotEmpty(validationErrors)) {
-            throw halt(400, String.join(", ", validationErrors));
+            response.status(400);
+            return new ResponseMessageDTO(String.join(", ", validationErrors));
         }
 
-        response.type("application/json");
 
         try {
             processBody(dto);
         } catch (HaltException he) {
-            return new ErrorResponseDTO(he.body());
+            response.status(he.statusCode());
+            return new ResponseMessageDTO(he.body());
         } catch (Throwable e) {
             log.error(String.format("Unexpected error during processing POST request %s %s", request.url(), request.body()), e);
-            return new ErrorResponseDTO("error occurred");
+            return new ResponseMessageDTO("error occurred");
         }
 
-        return "success";
+        return new ResponseMessageDTO("success");
     }
 
     /**

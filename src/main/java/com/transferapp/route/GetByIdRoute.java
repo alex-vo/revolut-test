@@ -1,6 +1,6 @@
 package com.transferapp.route;
 
-import com.transferapp.dto.ErrorResponseDTO;
+import com.transferapp.dto.ResponseMessageDTO;
 import lombok.extern.slf4j.Slf4j;
 import spark.HaltException;
 import spark.Request;
@@ -25,10 +25,11 @@ public abstract class GetByIdRoute<T> implements Route {
         try {
             return this.processGetRequest(id);
         } catch (HaltException he) {
-            return new ErrorResponseDTO(he.body());
+            response.status(he.statusCode());
+            return new ResponseMessageDTO(he.body());
         } catch (Throwable e) {
             log.error(String.format("Unexpected error during processing GET request %s", request.url()), e);
-            return new ErrorResponseDTO("error occurred");
+            return new ResponseMessageDTO("error occurred");
         }
     }
 
