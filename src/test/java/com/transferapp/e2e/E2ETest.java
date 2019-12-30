@@ -125,6 +125,16 @@ public class E2ETest {
         assertThat(responseMessageDTO.getMessage(), is(String.format("account %d not found", 101L)));
     }
 
+    @Test
+    public void testTransferFunds_fail_insufficientFunds() {
+        TransferDTO dto = prepareTransferDTO(FIRST_ACCOUNT_ID, SECOND_ACCOUNT_ID, BigDecimal.valueOf(10));
+        ResponseMessageDTO responseMessageDTO = RestAssured.given().body(GSON.toJson(dto))
+                .post("/transfer")
+                .then().statusCode(400)
+                .extract().as(ResponseMessageDTO.class);
+        assertThat(responseMessageDTO.getMessage(), is("insufficient funds"));
+    }
+
     private TransferDTO prepareTransferDTO(Long from, Long to, BigDecimal amount) {
         TransferDTO dto = new TransferDTO();
         dto.setFrom(from);
