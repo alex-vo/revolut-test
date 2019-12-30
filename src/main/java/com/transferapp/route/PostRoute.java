@@ -1,8 +1,11 @@
 package com.transferapp.route;
 
 import com.google.gson.Gson;
+import com.transferapp.dto.ErrorResponseDTO;
 import com.transferapp.dto.validation.AbstractDTOValidator;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import spark.HaltException;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -16,6 +19,7 @@ import static spark.Spark.halt;
  *
  * @param <T> type of the object provided in the request body
  */
+@Slf4j
 public abstract class PostRoute<T> implements Route {
 
     private Class<T> clazz;
@@ -37,8 +41,16 @@ public abstract class PostRoute<T> implements Route {
             throw halt(400, String.join(", ", validationErrors));
         }
 
-        processBody(dto);
         response.type("application/json");
+
+        try {
+            processBody(dto);
+        } catch (HaltException he) {
+            throw he;
+        } catch (Throwable e) {
+            log.error(String.format("Unexpected error during processing POST request %s %s", request.url(), request.body()), e);
+            return new ErrorResponseDTO("error occurred");
+        }
 
         return "success";
     }

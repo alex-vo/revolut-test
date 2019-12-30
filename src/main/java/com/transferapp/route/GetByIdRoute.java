@@ -1,5 +1,8 @@
 package com.transferapp.route;
 
+import com.transferapp.dto.ErrorResponseDTO;
+import lombok.extern.slf4j.Slf4j;
+import spark.HaltException;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -9,6 +12,7 @@ import spark.Route;
  *
  * @param <T> type of the object to be returned in the response body
  */
+@Slf4j
 public abstract class GetByIdRoute<T> implements Route {
 
     /**
@@ -18,7 +22,14 @@ public abstract class GetByIdRoute<T> implements Route {
     public Object handle(Request request, Response response) {
         Long id = Long.valueOf(request.params(":id"));
         response.type("application/json");
-        return this.processGetRequest(id);
+        try {
+            return this.processGetRequest(id);
+        } catch (HaltException he) {
+            throw he;
+        } catch (Throwable e) {
+            log.error(String.format("Unexpected error during processing GET request %s", request.url()), e);
+            return new ErrorResponseDTO("error occurred");
+        }
     }
 
     /**
