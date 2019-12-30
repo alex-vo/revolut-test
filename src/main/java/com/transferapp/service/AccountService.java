@@ -1,11 +1,12 @@
 package com.transferapp.service;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.transferapp.dto.AccountStateDTO;
 import com.transferapp.dto.TransferDTO;
 import com.transferapp.dto.mapper.AccountStateDTOMapper;
 import com.transferapp.entity.Account;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import lombok.extern.slf4j.Slf4j;
 import spark.Spark;
 
 import javax.persistence.EntityManager;
@@ -13,6 +14,7 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 @Singleton
+@Slf4j
 public class AccountService {
 
     private final EntityManager em;
@@ -25,6 +27,7 @@ public class AccountService {
     }
 
     public void processTransfer(TransferDTO dto) {
+        log.info(String.format("Processing transfer %s", dto));
         transactionService.executeInTransaction(() -> {
             Account from = Optional.ofNullable(em.find(Account.class, dto.getFrom()))
                     .orElseThrow(() -> Spark.halt(404, String.format("account %d not found", dto.getFrom())));
@@ -39,9 +42,11 @@ public class AccountService {
             em.merge(from);
             em.merge(to);
         });
+        log.info(String.format("Finished processing transfer %s", dto));
     }
 
     public AccountStateDTO getAccountState(Long id) {
+        log.info(String.format("Finding account by id %d", id));
         Account account = Optional.ofNullable(em.find(Account.class, id))
                 .orElseThrow(() -> Spark.halt(404, "account not found"));
         return AccountStateDTOMapper.map(account);
