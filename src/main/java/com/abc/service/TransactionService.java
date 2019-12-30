@@ -1,13 +1,23 @@
 package com.abc.service;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import org.hibernate.Session;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
+@Singleton
 public class TransactionService {
 
-    public void executeInTransaction(EntityManager em, Runnable runnable) {
+    private final EntityManager em;
+
+    @Inject
+    public TransactionService(EntityManager em) {
+        this.em = em;
+    }
+
+    public void executeInTransaction(Runnable runnable) {
         EntityTransaction tx = null;
 
         try {

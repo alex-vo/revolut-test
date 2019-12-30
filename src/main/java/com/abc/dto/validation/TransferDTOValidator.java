@@ -1,13 +1,14 @@
 package com.abc.dto.validation;
 
 import com.abc.dto.TransferDTO;
+import com.google.inject.Singleton;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+@Singleton
 public class TransferDTOValidator extends AbstractDTOValidator<TransferDTO> {
-
 
     @Override
     public List<String> validateSpecific(TransferDTO dto) {

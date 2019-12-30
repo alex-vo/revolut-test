@@ -1,6 +1,5 @@
 package com.abc.route;
 
-import com.abc.Pico;
 import com.abc.dto.validation.AbstractDTOValidator;
 import com.google.gson.Gson;
 import org.apache.commons.collections4.CollectionUtils;
@@ -15,7 +14,7 @@ import static spark.Spark.halt;
 public abstract class PostRoute<T> implements Route {
 
     private Class<T> clazz;
-    private Gson gson = Pico.getGson();
+    private Gson gson = new Gson();
 
     public PostRoute(Class<T> clazz) {
         this.clazz = clazz;

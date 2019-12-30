@@ -1,22 +1,31 @@
 package com.abc.service;
 
-import com.abc.Pico;
 import com.abc.dto.AccountStateDTO;
 import com.abc.dto.TransferDTO;
 import com.abc.entity.Account;
 import com.abc.mapper.AccountStateDTOMapper;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import spark.Spark;
 
 import javax.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.util.Optional;
 
+@Singleton
 public class AccountService {
 
-    private EntityManager em = Pico.getEntityManager();
+    private final EntityManager em;
+    private final TransactionService transactionService;
+
+    @Inject
+    public AccountService(EntityManager em, TransactionService transactionService) {
+        this.em = em;
+        this.transactionService = transactionService;
+    }
 
     public void processTransfer(TransferDTO dto) {
-        Pico.getTransactionService().executeInTransaction(em, () -> {
+        transactionService.executeInTransaction(() -> {
             Account from = Optional.ofNullable(em.find(Account.class, dto.getFrom()))
                     .orElseThrow(() -> Spark.halt(404, String.format("account %d not found", dto.getFrom())));
             Account to = Optional.ofNullable(em.find(Account.class, dto.getTo()))

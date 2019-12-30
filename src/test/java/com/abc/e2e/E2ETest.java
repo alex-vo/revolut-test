@@ -1,6 +1,6 @@
 package com.abc.e2e;
 
-import com.abc.MainClass;
+import com.abc.TransferApp;
 import com.abc.dto.AccountStateDTO;
 import com.abc.dto.TransferDTO;
 import com.google.gson.Gson;
@@ -24,7 +24,7 @@ public class E2ETest {
 
     @BeforeAll
     public static void setup() {
-        MainClass.main(new String[]{});
+        TransferApp.main(new String[]{});
         RestAssured.port = 4567;
         Awaitility.await().atMost(10L, TimeUnit.SECONDS).pollInterval(1L, TimeUnit.SECONDS).until(() -> {
             try {
