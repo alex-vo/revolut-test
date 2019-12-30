@@ -1,4 +1,4 @@
-package com.abc;
+package com.transferapp;
 
 import com.google.inject.AbstractModule;
 

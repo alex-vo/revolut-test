@@ -1,4 +1,4 @@
-package com.abc.dto;
+package com.transferapp.dto;
 
 import lombok.Builder;
 import lombok.Data;

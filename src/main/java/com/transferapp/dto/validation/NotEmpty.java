@@ -1,4 +1,4 @@
-package com.abc.dto.validation;
+package com.transferapp.dto.validation;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;

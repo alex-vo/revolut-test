@@ -1,4 +1,4 @@
-package com.abc.entity;
+package com.transferapp.entity;
 
 import lombok.Data;
 import org.hibernate.annotations.Check;

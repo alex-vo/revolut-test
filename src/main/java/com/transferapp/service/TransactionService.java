@@ -1,4 +1,4 @@
-package com.abc.service;
+package com.transferapp.service;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;

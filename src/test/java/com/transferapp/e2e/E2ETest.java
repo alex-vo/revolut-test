@@ -1,8 +1,8 @@
-package com.abc.e2e;
+package com.transferapp.e2e;
 
-import com.abc.TransferApp;
-import com.abc.dto.AccountStateDTO;
-import com.abc.dto.TransferDTO;
+import com.transferapp.TransferApp;
+import com.transferapp.dto.AccountStateDTO;
+import com.transferapp.dto.TransferDTO;
 import com.google.gson.Gson;
 import io.restassured.RestAssured;
 import org.awaitility.Awaitility;

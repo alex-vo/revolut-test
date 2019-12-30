@@ -1,15 +1,15 @@
-package com.abc;
+package com.transferapp;
 
-import com.abc.dto.transformer.JSONResponseTransformer;
-import com.abc.dto.AccountStateDTO;
-import com.abc.dto.TransferDTO;
-import com.abc.dto.validation.AbstractDTOValidator;
-import com.abc.dto.validation.TransferDTOValidator;
-import com.abc.entity.Account;
-import com.abc.route.GetByIdRoute;
-import com.abc.route.PostRoute;
-import com.abc.service.AccountService;
-import com.abc.service.TransactionService;
+import com.transferapp.dto.transformer.JSONResponseTransformer;
+import com.transferapp.dto.AccountStateDTO;
+import com.transferapp.dto.TransferDTO;
+import com.transferapp.dto.validation.AbstractDTOValidator;
+import com.transferapp.dto.validation.TransferDTOValidator;
+import com.transferapp.entity.Account;
+import com.transferapp.route.GetByIdRoute;
+import com.transferapp.route.PostRoute;
+import com.transferapp.service.AccountService;
+import com.transferapp.service.TransactionService;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.apache.log4j.BasicConfigurator;

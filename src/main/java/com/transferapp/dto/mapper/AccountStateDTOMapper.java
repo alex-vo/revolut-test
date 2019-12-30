@@ -1,7 +1,7 @@
-package com.abc.dto.mapper;
+package com.transferapp.dto.mapper;
 
-import com.abc.dto.AccountStateDTO;
-import com.abc.entity.Account;
+import com.transferapp.dto.AccountStateDTO;
+import com.transferapp.entity.Account;
 
 public class AccountStateDTOMapper {
 

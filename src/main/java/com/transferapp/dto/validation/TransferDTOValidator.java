@@ -1,6 +1,6 @@
-package com.abc.dto.validation;
+package com.transferapp.dto.validation;
 
-import com.abc.dto.TransferDTO;
+import com.transferapp.dto.TransferDTO;
 import com.google.inject.Singleton;
 
 import java.math.BigDecimal;

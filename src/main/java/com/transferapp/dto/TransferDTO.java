@@ -1,6 +1,6 @@
-package com.abc.dto;
+package com.transferapp.dto;
 
-import com.abc.dto.validation.NotEmpty;
+import com.transferapp.dto.validation.NotEmpty;
 import lombok.Data;
 
 import java.math.BigDecimal;
