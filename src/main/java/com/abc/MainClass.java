@@ -6,6 +6,7 @@ import com.abc.dto.validation.AbstractDTOValidator;
 import com.abc.entity.Account;
 import com.abc.route.GetByIdRoute;
 import com.abc.route.PostRoute;
+import org.apache.log4j.BasicConfigurator;
 import spark.Spark;
 
 import javax.persistence.EntityManager;
@@ -14,6 +15,7 @@ import java.math.BigDecimal;
 public class MainClass {
 
     public static void main(String[] args) {
+        BasicConfigurator.configure();
         prepareData();
 
         Spark.post(
@@ -42,6 +44,8 @@ public class MainClass {
                 },
                 Pico.getJSONResponseTransformer()
         );
+
+        Spark.get("/healthcheck", (request, response) -> "ok");
     }
 
     private static void prepareData() {

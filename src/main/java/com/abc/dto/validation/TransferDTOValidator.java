@@ -16,8 +16,8 @@ public class TransferDTOValidator extends AbstractDTOValidator<TransferDTO> {
             result.add("Cannot transfer to self");
         }
 
-        if (BigDecimal.ZERO.compareTo(dto.getAmount()) > 0) {
-            result.add("cannot transfer negative amount");
+        if (BigDecimal.ZERO.compareTo(dto.getAmount()) >= 0) {
+            result.add("transfer amount has to be positive");
         }
         return result;
     }

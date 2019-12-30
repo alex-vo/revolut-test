@@ -18,8 +18,11 @@ dependencies {
     compile "org.hibernate:hibernate-core:5.4.10.Final"
     compile "commons-beanutils:commons-beanutils:1.9.4"
     compile "org.apache.commons:commons-collections4:4.1"
+    compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.30'
 
-    runtimeOnly group: 'com.h2database', name: 'h2', version: '1.4.200'
+    runtimeOnly "com.h2database:h2:1.4.200"
 
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.5.2'
+    testCompile "io.rest-assured:rest-assured:3.0.0"
+    testCompile group: 'org.awaitility', name: 'awaitility', version: '4.0.1'
 }
