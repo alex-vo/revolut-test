@@ -1,6 +1,6 @@
 package com.abc;
 
-import com.abc.config.JSONResponseTransformer;
+import com.abc.dto.transformer.JSONResponseTransformer;
 import com.abc.dto.AccountStateDTO;
 import com.abc.dto.TransferDTO;
 import com.abc.dto.validation.AbstractDTOValidator;

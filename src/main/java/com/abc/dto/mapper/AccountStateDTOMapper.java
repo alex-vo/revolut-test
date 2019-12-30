@@ -1,4 +1,4 @@
-package com.abc.mapper;
+package com.abc.dto.mapper;
 
 import com.abc.dto.AccountStateDTO;
 import com.abc.entity.Account;

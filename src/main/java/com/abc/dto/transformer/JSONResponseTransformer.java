@@ -1,4 +1,4 @@
-package com.abc.config;
+package com.abc.dto.transformer;
 
 import com.google.gson.Gson;
 import com.google.inject.Singleton;
