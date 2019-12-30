@@ -1,8 +1,10 @@
 package com.transferapp;
 
-import com.transferapp.dto.transformer.JSONResponseTransformer;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import com.transferapp.dto.AccountStateDTO;
 import com.transferapp.dto.TransferDTO;
+import com.transferapp.dto.transformer.JSONResponseTransformer;
 import com.transferapp.dto.validation.AbstractDTOValidator;
 import com.transferapp.dto.validation.TransferDTOValidator;
 import com.transferapp.entity.Account;
@@ -10,8 +12,6 @@ import com.transferapp.route.GetByIdRoute;
 import com.transferapp.route.PostRoute;
 import com.transferapp.service.AccountService;
 import com.transferapp.service.TransactionService;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 import org.apache.log4j.BasicConfigurator;
 import spark.Spark;
 
@@ -24,7 +24,7 @@ public class TransferApp {
         BasicConfigurator.configure();
     }
 
-    static Injector injector = Guice.createInjector(new TransferAppModule());
+    private static Injector injector = Guice.createInjector(new TransferAppModule());
 
     public static void main(String[] args) {
         prepareData();
@@ -32,7 +32,7 @@ public class TransferApp {
         final AccountService accountService = injector.getInstance(AccountService.class);
         Spark.post(
                 "/transfer",
-                new PostRoute<TransferDTO>(TransferDTO.class) {
+                new PostRoute<>(TransferDTO.class) {
                     @Override
                     protected AbstractDTOValidator<TransferDTO> getDTOValidator() {
                         return injector.getInstance(TransferDTOValidator.class);

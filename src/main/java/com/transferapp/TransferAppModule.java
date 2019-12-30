@@ -1,11 +1,14 @@
 package com.transferapp;
 
 import com.google.inject.AbstractModule;
+import com.transferapp.entity.Account;
+import org.hibernate.cfg.AvailableSettings;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Properties;
 
 public class TransferAppModule extends AbstractModule {
@@ -22,9 +25,10 @@ public class TransferAppModule extends AbstractModule {
     }
 
     private EntityManager createEntityManager() throws IOException {
-        Properties hibernateProperties = new Properties();
-        hibernateProperties.load(TransferApp.class.getClassLoader().getResourceAsStream("hibernate.properties"));
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("persistence-unit1", hibernateProperties);
+        Properties props = new Properties();
+        props.load(TransferApp.class.getClassLoader().getResourceAsStream("hibernate.properties"));
+        props.put(AvailableSettings.LOADED_CLASSES, Collections.singletonList(Account.class));
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("persistence-unit1", props);
         return emf.createEntityManager();
     }
 }
