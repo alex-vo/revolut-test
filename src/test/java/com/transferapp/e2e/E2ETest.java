@@ -40,10 +40,10 @@ public class E2ETest {
     public void testGetAccountById() {
         AccountStateDTO firstAccountState = performGetAccountRequest(FIRST_ACCOUNT_ID);
         assertThat(firstAccountState.getId(), is(FIRST_ACCOUNT_ID));
-        assertThat(firstAccountState.getAmount(), is(BigDecimal.valueOf(4.5)));
+        assertThat(firstAccountState.getBalance(), is(BigDecimal.valueOf(4.5)));
         AccountStateDTO secondAccountState = performGetAccountRequest(SECOND_ACCOUNT_ID);
         assertThat(secondAccountState.getId(), is(SECOND_ACCOUNT_ID));
-        assertThat(secondAccountState.getAmount(), is(BigDecimal.valueOf(3.5)));
+        assertThat(secondAccountState.getBalance(), is(BigDecimal.valueOf(3.5)));
 
         RestAssured.given().get("/account/3")
                 .then().statusCode(404);
@@ -59,15 +59,15 @@ public class E2ETest {
 
     @Test
     public void testTransferFunds_happyPath() {
-        BigDecimal fistAccountInitialAmount = performGetAccountRequest(FIRST_ACCOUNT_ID).getAmount();
-        BigDecimal secondAccountInitialAmount = performGetAccountRequest(SECOND_ACCOUNT_ID).getAmount();
+        BigDecimal fistAccountInitialAmount = performGetAccountRequest(FIRST_ACCOUNT_ID).getBalance();
+        BigDecimal secondAccountInitialAmount = performGetAccountRequest(SECOND_ACCOUNT_ID).getBalance();
         assertThat(fistAccountInitialAmount, greaterThan(BigDecimal.ONE));
         RestAssured.given().body(GSON.toJson(prepareTransferDTO(FIRST_ACCOUNT_ID, SECOND_ACCOUNT_ID, BigDecimal.ONE)))
                 .post("/transfer")
                 .then().statusCode(200);
 
-        assertThat(performGetAccountRequest(FIRST_ACCOUNT_ID).getAmount(), is(fistAccountInitialAmount.subtract(BigDecimal.ONE)));
-        assertThat(performGetAccountRequest(SECOND_ACCOUNT_ID).getAmount(), is(secondAccountInitialAmount.add(BigDecimal.ONE)));
+        assertThat(performGetAccountRequest(FIRST_ACCOUNT_ID).getBalance(), is(fistAccountInitialAmount.subtract(BigDecimal.ONE)));
+        assertThat(performGetAccountRequest(SECOND_ACCOUNT_ID).getBalance(), is(secondAccountInitialAmount.add(BigDecimal.ONE)));
     }
 
     @Test
@@ -85,14 +85,14 @@ public class E2ETest {
                 .post("/transfer")
                 .then().statusCode(400)
                 .extract().asString();
-        assertThat(errorMessage, is("from account cannot be empty"));
+        assertThat(errorMessage, is("source account cannot be empty"));
         dto.setFrom(FIRST_ACCOUNT_ID);
         dto.setTo(null);
         errorMessage = RestAssured.given().body(GSON.toJson(dto))
                 .post("/transfer")
                 .then().statusCode(400)
                 .extract().asString();
-        assertThat(errorMessage, is("to account cannot be empty"));
+        assertThat(errorMessage, is("destination account cannot be empty"));
         dto.setTo(FIRST_ACCOUNT_ID);
         errorMessage = RestAssured.given().body(GSON.toJson(dto))
                 .post("/transfer")

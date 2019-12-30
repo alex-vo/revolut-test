@@ -8,7 +8,7 @@ public class AccountStateDTOMapper {
     public static AccountStateDTO map(Account account) {
         return AccountStateDTO.builder()
                 .id(account.getId())
-                .amount(account.getBalance())
+                .balance(account.getBalance())
                 .build();
     }
 

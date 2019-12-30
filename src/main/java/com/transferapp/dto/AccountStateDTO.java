@@ -9,5 +9,5 @@ import java.math.BigDecimal;
 @Builder
 public class AccountStateDTO {
     private Long id;
-    private BigDecimal amount;
+    private BigDecimal balance;
 }

@@ -12,7 +12,7 @@ public abstract class AbstractDTOValidator<T> {
         List<String> result = new ArrayList<>();
         for (Field field : dto.getClass().getDeclaredFields()) {
             if (field.isAnnotationPresent(NotEmpty.class)) {
-                boolean accessible = field.isAccessible();
+                boolean accessible = field.canAccess(dto);
                 try {
                     field.setAccessible(true);
                     Object value = field.get(dto);
@@ -34,6 +34,6 @@ public abstract class AbstractDTOValidator<T> {
         return validateSpecific(dto);
     }
 
-    public abstract List<String> validateSpecific(T dto);
+    protected abstract List<String> validateSpecific(T dto);
 
 }
