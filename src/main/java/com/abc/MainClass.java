@@ -1,54 +1,51 @@
 package com.abc;
 
+import com.abc.dto.AccountStateDTO;
 import com.abc.dto.TransferDTO;
+import com.abc.dto.validation.AbstractDTOValidator;
 import com.abc.entity.Account;
-import com.google.gson.Gson;
-import org.apache.commons.collections4.CollectionUtils;
+import com.abc.route.GetByIdRoute;
+import com.abc.route.PostRoute;
 import spark.Spark;
 
 import javax.persistence.EntityManager;
 import java.math.BigDecimal;
-import java.util.List;
-
-import static spark.Spark.halt;
 
 public class MainClass {
-
-    private static final Gson gson = new Gson();
 
     public static void main(String[] args) {
         prepareData();
 
         Spark.post(
                 "/transfer",
-                (req, res) -> {
-                    TransferDTO dto = gson.fromJson(req.body(), TransferDTO.class);
-                    List<String> validationErrors = Pico.getTransferDTOValidator().validate(dto);
-                    if (CollectionUtils.isNotEmpty(validationErrors)) {
-                        throw halt(400, String.join(", ", validationErrors));
+                new PostRoute<TransferDTO>(TransferDTO.class) {
+                    @Override
+                    protected AbstractDTOValidator<TransferDTO> getDTOValidator() {
+                        return Pico.getTransferDTOValidator();
                     }
 
-                    Pico.getAccountService().processTransfer(dto);
-
-                    res.type("application/json");
-                    return "transfer completed";
+                    @Override
+                    protected void processBody(TransferDTO dto) {
+                        Pico.getAccountService().processTransfer(dto);
+                    }
                 },
                 Pico.getJSONResponseTransformer()
         );
 
         Spark.get(
                 "/account/:id",
-                (req, res) -> {
-                    Long id = Long.valueOf(req.params(":id"));
-                    res.type("application/json");
-                    return Pico.getAccountService().getAccountState(id);
+                new GetByIdRoute<AccountStateDTO>() {
+                    @Override
+                    protected AccountStateDTO processGetRequest(Long id) {
+                        return Pico.getAccountService().getAccountState(id);
+                    }
                 },
                 Pico.getJSONResponseTransformer()
         );
     }
 
     private static void prepareData() {
-        Pico.getTransactionService().executeInTransaction(() -> {
+        Pico.getTransactionService().executeInTransaction(Pico.getEntityManager(), () -> {
             EntityManager em = Pico.getEntityManager();
             Account a1 = new Account();
             a1.setBalance(BigDecimal.valueOf(4.5));

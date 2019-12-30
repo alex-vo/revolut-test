@@ -1,6 +1,5 @@
 package com.abc.service;
 
-import com.abc.Pico;
 import org.hibernate.Session;
 
 import javax.persistence.EntityManager;
@@ -8,8 +7,7 @@ import javax.persistence.EntityTransaction;
 
 public class TransactionService {
 
-    public void executeInTransaction(Runnable runnable) {
-        EntityManager em = Pico.getEntityManager();
+    public void executeInTransaction(EntityManager em, Runnable runnable) {
         EntityTransaction tx = null;
 
         try {

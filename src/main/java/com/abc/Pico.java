@@ -4,6 +4,7 @@ import com.abc.config.JSONResponseTransformer;
 import com.abc.dto.validation.TransferDTOValidator;
 import com.abc.service.AccountService;
 import com.abc.service.TransactionService;
+import com.google.gson.Gson;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -51,6 +52,10 @@ public class Pico {
         }
 
         return ts;
+    }
+
+    public static Gson getGson() {
+        return new Gson();
     }
 
 }

@@ -1,20 +1,17 @@
 package com.abc.dto.validation;
 
 import com.abc.dto.TransferDTO;
-import org.apache.commons.collections4.CollectionUtils;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
-public class TransferDTOValidator extends AbstractDTOValidator {
+public class TransferDTOValidator extends AbstractDTOValidator<TransferDTO> {
 
-    public List<String> validate(TransferDTO dto) {
-        List<String> result = super.validate(dto);
 
-        if (CollectionUtils.isNotEmpty(result)) {
-            return result;
-        }
-
+    @Override
+    public List<String> validateSpecific(TransferDTO dto) {
+        List<String> result = new ArrayList<>();
         if (dto.getFrom().equals(dto.getTo())) {
             result.add("Cannot transfer to self");
         }
@@ -24,5 +21,4 @@ public class TransferDTOValidator extends AbstractDTOValidator {
         }
         return result;
     }
-
 }

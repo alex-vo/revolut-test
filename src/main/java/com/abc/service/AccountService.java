@@ -16,7 +16,7 @@ public class AccountService {
     private EntityManager em = Pico.getEntityManager();
 
     public void processTransfer(TransferDTO dto) {
-        Pico.getTransactionService().executeInTransaction(() -> {
+        Pico.getTransactionService().executeInTransaction(em, () -> {
             Account from = Optional.ofNullable(em.find(Account.class, dto.getFrom()))
                     .orElseThrow(() -> Spark.halt(404, String.format("account %d not found", dto.getFrom())));
             Account to = Optional.ofNullable(em.find(Account.class, dto.getTo()))

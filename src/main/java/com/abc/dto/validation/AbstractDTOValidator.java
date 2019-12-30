@@ -1,12 +1,14 @@
 package com.abc.dto.validation;
 
+import org.apache.commons.collections4.CollectionUtils;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractDTOValidator {
+public abstract class AbstractDTOValidator<T> {
 
-    public List<String> validate(Object dto) {
+    public List<String> validate(T dto) {
         List<String> result = new ArrayList<>();
         for (Field field : dto.getClass().getDeclaredFields()) {
             if (field.isAnnotationPresent(NotEmpty.class)) {
@@ -25,7 +27,13 @@ public abstract class AbstractDTOValidator {
             }
         }
 
-        return result;
+        if (CollectionUtils.isNotEmpty(result)) {
+            return result;
+        }
+
+        return validateSpecific(dto);
     }
+
+    public abstract List<String> validateSpecific(T dto);
 
 }
