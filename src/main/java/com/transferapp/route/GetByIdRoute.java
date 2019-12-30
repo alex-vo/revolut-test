@@ -25,7 +25,7 @@ public abstract class GetByIdRoute<T> implements Route {
         try {
             return this.processGetRequest(id);
         } catch (HaltException he) {
-            throw he;
+            return new ErrorResponseDTO(he.body());
         } catch (Throwable e) {
             log.error(String.format("Unexpected error during processing GET request %s", request.url()), e);
             return new ErrorResponseDTO("error occurred");

@@ -3,6 +3,7 @@ package com.transferapp;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.transferapp.dto.AccountStateDTO;
+import com.transferapp.dto.ErrorResponseDTO;
 import com.transferapp.dto.TransferDTO;
 import com.transferapp.dto.transformer.JSONResponseTransformer;
 import com.transferapp.dto.validation.AbstractDTOValidator;
@@ -58,6 +59,11 @@ public class TransferApp {
         );
 
         Spark.get("/healthcheck", (request, response) -> "ok");
+
+        Spark.notFound((req, res) -> {
+            res.type("application/json");
+            return injector.getInstance(JSONResponseTransformer.class).render(new ErrorResponseDTO("not found"));
+        });
     }
 
     private static void prepareData() {

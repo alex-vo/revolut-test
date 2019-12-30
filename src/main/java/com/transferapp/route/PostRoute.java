@@ -46,7 +46,7 @@ public abstract class PostRoute<T> implements Route {
         try {
             processBody(dto);
         } catch (HaltException he) {
-            throw he;
+            return new ErrorResponseDTO(he.body());
         } catch (Throwable e) {
             log.error(String.format("Unexpected error during processing POST request %s %s", request.url(), request.body()), e);
             return new ErrorResponseDTO("error occurred");
