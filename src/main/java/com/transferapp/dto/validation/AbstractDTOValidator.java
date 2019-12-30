@@ -12,7 +12,7 @@ public abstract class AbstractDTOValidator<T> {
         List<String> result = new ArrayList<>();
         for (Field field : dto.getClass().getDeclaredFields()) {
             if (field.isAnnotationPresent(NotEmpty.class)) {
-                boolean accessible = field.canAccess(dto);
+                boolean accessible = field.isAccessible();
                 try {
                     field.setAccessible(true);
                     Object value = field.get(dto);

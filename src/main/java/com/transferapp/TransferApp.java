@@ -32,7 +32,7 @@ public class TransferApp {
         final AccountService accountService = injector.getInstance(AccountService.class);
         Spark.post(
                 "/transfer",
-                new PostRoute<>(TransferDTO.class) {
+                new PostRoute<TransferDTO>(TransferDTO.class) {
                     @Override
                     protected AbstractDTOValidator<TransferDTO> getDTOValidator() {
                         return injector.getInstance(TransferDTOValidator.class);

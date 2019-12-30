@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'application'
 }
 
 group 'com.transferapp'
@@ -27,4 +28,8 @@ dependencies {
     testCompile "io.rest-assured:rest-assured:3.0.0"
     testCompile "org.awaitility:awaitility:4.0.1"
     testCompile "org.mockito:mockito-core:3.2.4"
+}
+
+application {
+    mainClassName = "com.transferapp.TransferApp"
 }
